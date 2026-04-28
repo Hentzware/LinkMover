@@ -8,7 +8,9 @@ using System.Windows;
 using LinkMover.Core.Abstractions;
 using LinkMover.Core.Events;
 using LinkMover.Inventory.Models;
+using LinkMover.Inventory.Restore;
 using LinkMover.Inventory.Services;
+using LinkMover.Inventory.Views;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -20,6 +22,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
 {
     private readonly IInventoryScanner _scanner;
     private readonly IJunctionService _junctionService;
+    private readonly IJunctionRestoreOrchestrator _restoreOrchestrator;
     private readonly IEventAggregator _eventAggregator;
     private CancellationTokenSource? _cts;
     private bool _isBusy;
@@ -27,16 +30,19 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     public InventoryListViewModel(
         IInventoryScanner scanner,
         IJunctionService junctionService,
+        IJunctionRestoreOrchestrator restoreOrchestrator,
         IEventAggregator eventAggregator)
     {
         _scanner = scanner;
         _junctionService = junctionService;
+        _restoreOrchestrator = restoreOrchestrator;
         _eventAggregator = eventAggregator;
 
         Entries = new ObservableCollection<InventoryEntry>();
         RefreshCommand = new DelegateCommand(async () => await RefreshAsync(), () => !IsBusy);
         OpenInExplorerCommand = new DelegateCommand<InventoryEntry>(OpenInExplorer);
         RemoveJunctionCommand = new DelegateCommand<InventoryEntry>(async entry => await RemoveJunctionAsync(entry));
+        RestoreCommand = new DelegateCommand<InventoryEntry>(Restore);
 
         eventAggregator.GetEvent<JunctionCreatedEvent>().Subscribe(info =>
         {
@@ -61,6 +67,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     public DelegateCommand RefreshCommand { get; }
     public DelegateCommand<InventoryEntry> OpenInExplorerCommand { get; }
     public DelegateCommand<InventoryEntry> RemoveJunctionCommand { get; }
+    public DelegateCommand<InventoryEntry> RestoreCommand { get; }
 
     public string Title => "Inventar bestehender Junctions";
 
@@ -147,6 +154,23 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         {
             MessageBox.Show($"Junction konnte nicht entfernt werden:\n{ex.Message}", "Fehler",
                 MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void Restore(InventoryEntry entry)
+    {
+        if (entry is null) return;
+
+        var dialog = new RestoreDialog
+        {
+            DataContext = new RestoreDialogViewModel(_restoreOrchestrator, entry.SourcePath, entry.TargetPath),
+            Owner = Application.Current.MainWindow
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            Entries.Remove(entry);
+            _eventAggregator.GetEvent<JunctionRemovedEvent>().Publish(entry.SourcePath);
         }
     }
 }
