@@ -57,7 +57,20 @@
                   VirtualizingPanel.VirtualizationMode="Recycling">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type models:TreeNodeViewModel}" ItemsSource="{Binding Children}">
-                    <Grid Margin="0,2">
+                    <Grid Margin="0,2"
+                          Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Mit LinkMover auslagern…"
+                                          Command="{Binding PlacementTarget.Tag.RequestJunctionCommand,
+                                                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          CommandParameter="{Binding}"/>
+                                <MenuItem Header="Im Explorer öffnen"
+                                          Command="{Binding PlacementTarget.Tag.OpenInExplorerCommand,
+                                                            RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                          CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Grid.ContextMenu>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" MinWidth="200"/>
                             <ColumnDefinition Width="100"/>

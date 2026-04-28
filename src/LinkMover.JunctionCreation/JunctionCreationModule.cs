@@ -2,20 +2,37 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LicenseRef-Commons-Clause
 // See LICENSE for the full Apache 2.0 text and Commons Clause restriction.
 
+using LinkMover.Core.Events;
 using LinkMover.Core.Navigation;
 using LinkMover.JunctionCreation.ViewModels;
 using LinkMover.JunctionCreation.ViewModels.Steps;
 using LinkMover.JunctionCreation.Views;
 using LinkMover.JunctionCreation.Views.Steps;
 using LinkMover.JunctionCreation.Wizard;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Modularity;
+using Prism.Navigation.Regions;
 
 namespace LinkMover.JunctionCreation;
 
 public class JunctionCreationModule : IModule
 {
-    public void OnInitialized(IContainerProvider containerProvider) { }
+    public void OnInitialized(IContainerProvider containerProvider)
+    {
+        var eventAggregator = containerProvider.Resolve<IEventAggregator>();
+        var orchestrator = containerProvider.Resolve<IJunctionWizardOrchestrator>();
+        var regionManager = containerProvider.Resolve<IRegionManager>();
+
+        eventAggregator.GetEvent<CreateJunctionRequestedEvent>().Subscribe(plan =>
+        {
+            orchestrator.Reset();
+            orchestrator.Context.Source = plan.Source;
+            orchestrator.Context.Target = plan.Target;
+            orchestrator.Context.DryRun = plan.DryRun;
+            regionManager.RequestNavigate(RegionNames.Content, ViewNames.JunctionWizardHost);
+        }, ThreadOption.UIThread, keepSubscriberReferenceAlive: true);
+    }
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {

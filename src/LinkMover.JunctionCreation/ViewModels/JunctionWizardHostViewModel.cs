@@ -34,7 +34,12 @@ public class JunctionWizardHostViewModel : BindableBase
 
     public void OnViewLoaded()
     {
-        _orchestrator.Reset();
+        // Don't reset if the context was pre-filled (e.g. by the analyzer's
+        // "Mit LinkMover auslagern" entry publishing a CreateJunctionRequestedEvent).
+        if (string.IsNullOrEmpty(_orchestrator.Context.Source))
+        {
+            _orchestrator.Reset();
+        }
         StepLabel = "Schritt 1 von 7 — Quelle und Ziel wählen";
         _regionManager.RequestNavigate(RegionNames.WizardStep, ViewNames.WizardStep_SelectSource);
     }
