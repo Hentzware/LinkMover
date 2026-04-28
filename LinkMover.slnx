@@ -6,4 +6,10 @@
     <Project Path="src/LinkMover.JunctionCreation/LinkMover.JunctionCreation.csproj" />
     <Project Path="src/LinkMover.Shell/LinkMover.Shell.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LinkMover.Analyzer.Tests/LinkMover.Analyzer.Tests.csproj" />
+    <Project Path="tests/LinkMover.Core.Tests/LinkMover.Core.Tests.csproj" />
+    <Project Path="tests/LinkMover.Inventory.Tests/LinkMover.Inventory.Tests.csproj" />
+    <Project Path="tests/LinkMover.JunctionCreation.Tests/LinkMover.JunctionCreation.Tests.csproj" />
+  </Folder>
 </Solution>
