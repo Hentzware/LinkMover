@@ -1,12 +1,31 @@
-﻿using System.Configuration;
-using System.Data;
 using System.Windows;
+using LinkMover.Analyzer;
+using LinkMover.Inventory;
+using LinkMover.JunctionCreation;
+using Prism.DryIoc;
+using Prism.Ioc;
+using Prism.Modularity;
 
 namespace LinkMover.Shell;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
-public partial class App : Application
+public partial class App : PrismApplication
 {
+    protected override Window CreateShell()
+    {
+        var shell = Container.Resolve<MainWindow>();
+        shell.DataContext = Container.Resolve<MainWindowViewModel>();
+        return shell;
+    }
+
+    protected override void RegisterTypes(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.Register<MainWindowViewModel>();
+    }
+
+    protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+    {
+        moduleCatalog.AddModule<JunctionCreationModule>();
+        moduleCatalog.AddModule<InventoryModule>();
+        moduleCatalog.AddModule<AnalyzerModule>();
+    }
 }
