@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -19,23 +20,48 @@
                     Command="{Binding RefreshCommand}"/>
         </Grid>
 
-        <TextBlock Grid.Row="1" Text="Suche Junctions in User-Profile, AppData, ProgramData…"
-                   Foreground="#666" Margin="0,0,0,8"
-                   Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Filter:" VerticalAlignment="Center" Foreground="#666"/>
+            <TextBox Grid.Column="1" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged, Delay=150}"
+                     Padding="6,4" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Content="Leeren" Margin="8,0,0,0" Padding="12,4"
+                    Command="{Binding ClearFilterCommand}"/>
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="#888">
+                <Run Text="{Binding VisibleCount, Mode=OneWay}"/>
+                <Run Text=" von "/>
+                <Run Text="{Binding Entries.Count, Mode=OneWay}"/>
+            </TextBlock>
+        </Grid>
 
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Entries}"
+        <Border Grid.Row="2" Padding="12,8" Background="#F5F5F5" Margin="0,0,0,8"
+                Visibility="{Binding HasStatus, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="{Binding StatusText}" Foreground="#666"/>
+        </Border>
+
+        <DataGrid Grid.Row="3" ItemsSource="{Binding EntriesView}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                   IsReadOnly="True" HeadersVisibility="Column"
+                  CanUserSortColumns="True"
                   GridLinesVisibility="Horizontal" BorderThickness="0,1,0,0" BorderBrush="#DDD"
                   RowHeight="32">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Quelle (Junction)" Binding="{Binding SourcePath}" Width="*"
+                                    SortMemberPath="SourcePath"
                                     FontFamily="Consolas"/>
                 <DataGridTextColumn Header="Ziel (Daten)" Binding="{Binding TargetPath}" Width="*"
+                                    SortMemberPath="TargetPath"
                                     FontFamily="Consolas"/>
                 <DataGridTextColumn Header="Erstellt" Binding="{Binding Created, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                    SortMemberPath="Created"
                                     Width="140"/>
                 <DataGridTextColumn Header="Größe" Binding="{Binding SizeText}" Width="100"
+                                    SortMemberPath="SizeBytes"
                                     FontFamily="Consolas">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -44,7 +70,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTemplateColumn Header="Ziel" Width="80">
+                <DataGridTemplateColumn Header="Ziel" Width="80" SortMemberPath="TargetExists">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Padding="4,0">
@@ -67,7 +93,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Aktionen" Width="480">
+                <DataGridTemplateColumn Header="Aktionen" Width="480" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
