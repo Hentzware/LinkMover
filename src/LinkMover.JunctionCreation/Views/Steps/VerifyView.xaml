@@ -1,0 +1,89 @@
+<!-- Copyright (c) 2026 Henning Entz
+     SPDX-License-Identifier: Apache-2.0 WITH LicenseRef-Commons-Clause
+     See LICENSE for the full Apache 2.0 text and Commons Clause restriction. -->
+<UserControl x:Class="LinkMover.JunctionCreation.Views.Steps.VerifyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid Margin="32,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Verifikation" FontSize="16" Margin="0,0,0,16"/>
+
+        <TextBlock Grid.Row="1" Text="Vergleiche Quelle und Ziel…"
+                   Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
+                   Foreground="#666"/>
+
+        <StackPanel Grid.Row="2" Visibility="{Binding HasResult, Converter={StaticResource BoolToVis}}">
+            <Border Padding="16" Margin="0,0,0,16">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Context.VerifyResult.Match}" Value="True">
+                                <Setter Property="Background" Value="#E8F5E9"/>
+                                <Setter Property="BorderBrush" Value="#2E7D32"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Context.VerifyResult.Match}" Value="False">
+                                <Setter Property="Background" Value="#FFEBEE"/>
+                                <Setter Property="BorderBrush" Value="#C62828"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                        <Setter Property="BorderThickness" Value="1"/>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding ResultHeadline}" FontWeight="SemiBold" FontSize="14"/>
+            </Border>
+
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Quelle" FontWeight="SemiBold"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="Ziel" FontWeight="SemiBold"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Anzahl Dateien" Foreground="#666"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Context.VerifyResult.SourceFileCount}"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Context.VerifyResult.TargetFileCount}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Bytes" Foreground="#666"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SourceBytesFormatted}"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding TargetBytesFormatted}"/>
+            </Grid>
+
+            <TextBlock Text="Fehlende Dateien:" FontWeight="SemiBold" Margin="0,8,0,4"
+                       Visibility="{Binding HasMissingFiles, Converter={StaticResource BoolToVis}}"/>
+            <ItemsControl ItemsSource="{Binding Context.VerifyResult.MissingFiles}"
+                          Visibility="{Binding HasMissingFiles, Converter={StaticResource BoolToVis}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontFamily="Consolas" Foreground="#C62828"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Wizard beenden" Command="{Binding AbortCommand}" Padding="20,6" Margin="0,0,8,0"
+                    Visibility="{Binding ShowAbort, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Weiter zum Aufräumen" Command="{Binding ContinueCommand}" Padding="24,8"
+                    FontWeight="SemiBold"
+                    Visibility="{Binding ShowContinue, Converter={StaticResource BoolToVis}}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
