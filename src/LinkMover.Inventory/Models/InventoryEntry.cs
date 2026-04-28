@@ -26,6 +26,22 @@ public sealed class InventoryEntry : BindableBase
     public long? SizeBytes
     {
         get => _sizeBytes;
-        set => SetProperty(ref _sizeBytes, value);
+        set
+        {
+            if (SetProperty(ref _sizeBytes, value))
+            {
+                RaisePropertyChanged(nameof(SizeText));
+            }
+        }
+    }
+
+    public string SizeText => SizeBytes is null ? "…" : FormatBytes(SizeBytes.Value);
+
+    private static string FormatBytes(long bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024L * 1024) return $"{bytes / 1024.0:F1} KB";
+        if (bytes < 1024L * 1024 * 1024) return $"{bytes / (1024.0 * 1024):F1} MB";
+        return $"{bytes / (1024.0 * 1024 * 1024):F2} GB";
     }
 }

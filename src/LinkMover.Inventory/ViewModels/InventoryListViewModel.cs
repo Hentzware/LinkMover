@@ -23,6 +23,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     private readonly IInventoryScanner _scanner;
     private readonly IJunctionService _junctionService;
     private readonly IJunctionRestoreOrchestrator _restoreOrchestrator;
+    private readonly IFileSystemService _fileSystem;
     private readonly IEventAggregator _eventAggregator;
     private CancellationTokenSource? _cts;
     private bool _isBusy;
@@ -31,11 +32,13 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         IInventoryScanner scanner,
         IJunctionService junctionService,
         IJunctionRestoreOrchestrator restoreOrchestrator,
+        IFileSystemService fileSystem,
         IEventAggregator eventAggregator)
     {
         _scanner = scanner;
         _junctionService = junctionService;
         _restoreOrchestrator = restoreOrchestrator;
+        _fileSystem = fileSystem;
         _eventAggregator = eventAggregator;
 
         Entries = new ObservableCollection<InventoryEntry>();
@@ -46,7 +49,9 @@ public class InventoryListViewModel : BindableBase, INavigationAware
 
         eventAggregator.GetEvent<JunctionCreatedEvent>().Subscribe(info =>
         {
-            Entries.Add(new InventoryEntry(info.Source, info.Target, info.Created, info.TargetExists));
+            var entry = new InventoryEntry(info.Source, info.Target, info.Created, info.TargetExists);
+            Entries.Add(entry);
+            _ = ComputeSizeForEntryAsync(entry, _cts?.Token ?? CancellationToken.None);
         }, ThreadOption.UIThread, keepSubscriberReferenceAlive: true);
     }
 
@@ -99,6 +104,11 @@ public class InventoryListViewModel : BindableBase, INavigationAware
             {
                 Entries.Add(entry);
             }
+
+            // Sizes are computed lazily so the grid is responsive immediately.
+            // Each entry's SizeBytes setter raises PropertyChanged on SizeText,
+            // so the row updates the moment its size lands.
+            _ = ComputeAllSizesAsync(_cts.Token);
         }
         catch (OperationCanceledException)
         {
@@ -107,6 +117,37 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private async Task ComputeAllSizesAsync(CancellationToken ct)
+    {
+        foreach (var entry in Entries.ToList())
+        {
+            if (ct.IsCancellationRequested) break;
+            await ComputeSizeForEntryAsync(entry, ct);
+        }
+    }
+
+    private async Task ComputeSizeForEntryAsync(InventoryEntry entry, CancellationToken ct)
+    {
+        if (!entry.TargetExists)
+        {
+            entry.SizeBytes = 0;
+            return;
+        }
+        try
+        {
+            var size = await _fileSystem.GetDirectorySizeAsync(entry.TargetPath, progress: null, ct);
+            entry.SizeBytes = size;
+        }
+        catch (OperationCanceledException)
+        {
+            // refresh happened — leave size for the next pass
+        }
+        catch
+        {
+            // permission denied, target gone mid-walk, etc. — leave size as null ("…")
         }
     }
 

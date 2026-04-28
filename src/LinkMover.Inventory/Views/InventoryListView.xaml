@@ -35,6 +35,15 @@
                                     FontFamily="Consolas"/>
                 <DataGridTextColumn Header="Erstellt" Binding="{Binding Created, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
                                     Width="140"/>
+                <DataGridTextColumn Header="Größe" Binding="{Binding SizeText}" Width="100"
+                                    FontFamily="Consolas">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="Padding" Value="0,0,8,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTemplateColumn Header="Ziel" Width="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
