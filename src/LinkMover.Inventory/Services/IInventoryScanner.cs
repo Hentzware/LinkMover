@@ -8,5 +8,12 @@ namespace LinkMover.Inventory.Services;
 
 public interface IInventoryScanner
 {
-    Task<IReadOnlyList<InventoryEntry>> ScanAsync(IEnumerable<string> roots, CancellationToken ct);
+    // Streams entries via onEntry as they're discovered so the UI can populate
+    // the grid live. onCurrentPath reports the directory currently being walked
+    // so the status banner shows what the scanner is on right now.
+    Task ScanAsync(
+        IEnumerable<string> roots,
+        IProgress<InventoryEntry>? onEntry,
+        IProgress<string>? onCurrentPath,
+        CancellationToken ct);
 }

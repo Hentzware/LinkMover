@@ -34,6 +34,8 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     private CancellationTokenSource? _cts;
     private bool _isBusy;
     private string _filterText = string.Empty;
+    private string _scanCurrentPath = string.Empty;
+    private int _scanFoundCount;
     private int _sizeProgress;
     private int _sizeTotal;
     private bool _sizesComputing;
@@ -57,7 +59,11 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         EntriesView = CollectionViewSource.GetDefaultView(Entries);
         EntriesView.Filter = MatchesFilter;
 
-        RefreshCommand = new DelegateCommand(async () => await RefreshAsync(), () => !IsBusy);
+        // Refresh stays clickable even during a running scan so the user is
+        // never staring at a dead button — clicking it cancels the in-flight
+        // work and starts over.
+        RefreshCommand = new DelegateCommand(async () => await RefreshAsync());
+        CancelCommand = new DelegateCommand(Cancel, () => IsBusy || SizesComputing);
         OpenInExplorerCommand = new DelegateCommand<InventoryEntry>(OpenInExplorer);
         RemoveJunctionCommand = new DelegateCommand<InventoryEntry>(async entry => await RemoveJunctionAsync(entry));
         RestoreCommand = new DelegateCommand<InventoryEntry>(Restore);
@@ -83,9 +89,33 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         {
             if (SetProperty(ref _isBusy, value))
             {
-                RefreshCommand.RaiseCanExecuteChanged();
+                CancelCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged(nameof(StatusText));
                 RaisePropertyChanged(nameof(HasStatus));
+            }
+        }
+    }
+
+    public string ScanCurrentPath
+    {
+        get => _scanCurrentPath;
+        private set
+        {
+            if (SetProperty(ref _scanCurrentPath, value))
+            {
+                RaisePropertyChanged(nameof(StatusText));
+            }
+        }
+    }
+
+    public int ScanFoundCount
+    {
+        get => _scanFoundCount;
+        private set
+        {
+            if (SetProperty(ref _scanFoundCount, value))
+            {
+                RaisePropertyChanged(nameof(StatusText));
             }
         }
     }
@@ -131,6 +161,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         {
             if (SetProperty(ref _sizesComputing, value))
             {
+                CancelCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged(nameof(StatusText));
                 RaisePropertyChanged(nameof(HasStatus));
             }
@@ -141,7 +172,11 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     {
         get
         {
-            if (IsBusy) return "Suche Junctions in User-Profile, AppData, ProgramData…";
+            if (IsBusy)
+            {
+                var pathHint = string.IsNullOrEmpty(ScanCurrentPath) ? "…" : $" — {ScanCurrentPath}";
+                return $"Suche Junctions ({ScanFoundCount} gefunden){pathHint}";
+            }
             if (SizesComputing) return $"Berechne Größen… {SizeProgress} von {SizeTotal}";
             return string.Empty;
         }
@@ -150,6 +185,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     public bool HasStatus => IsBusy || SizesComputing;
 
     public DelegateCommand RefreshCommand { get; }
+    public DelegateCommand CancelCommand { get; }
     public DelegateCommand<InventoryEntry> OpenInExplorerCommand { get; }
     public DelegateCommand<InventoryEntry> RemoveJunctionCommand { get; }
     public DelegateCommand<InventoryEntry> RestoreCommand { get; }
@@ -185,29 +221,47 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     {
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
+        var token = _cts.Token;
+
+        Entries.Clear();
+        ScanFoundCount = 0;
+        ScanCurrentPath = string.Empty;
         IsBusy = true;
+
+        var entryProgress = new Progress<InventoryEntry>(entry =>
+        {
+            Entries.Add(entry);
+            ScanFoundCount = Entries.Count;
+            RaisePropertyChanged(nameof(VisibleCount));
+        });
+        var pathProgress = new Progress<string>(p => ScanCurrentPath = p);
+
         try
         {
-            var result = await _scanner.ScanAsync(InventoryScannerDefaults.StandardRoots, _cts.Token);
-            Entries.Clear();
-            foreach (var entry in result)
-            {
-                Entries.Add(entry);
-            }
-            RaisePropertyChanged(nameof(VisibleCount));
+            await _scanner.ScanAsync(InventoryScannerDefaults.StandardRoots, entryProgress, pathProgress, token);
 
-            // Sizes are computed in parallel in the background so the grid is responsive
-            // immediately and the user gets live progress instead of staring at "…".
-            _ = ComputeAllSizesAsync(_cts.Token);
+            // Size pass runs in the background so the grid is interactive immediately.
+            _ = ComputeAllSizesAsync(token);
         }
         catch (OperationCanceledException)
         {
-            // navigated away
+            // restarted or cancelled
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Scan fehlgeschlagen: {ex.Message}", "Fehler",
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {
             IsBusy = false;
+            ScanCurrentPath = string.Empty;
         }
+    }
+
+    private void Cancel()
+    {
+        _cts?.Cancel();
     }
 
     private async Task ComputeAllSizesAsync(CancellationToken ct)
@@ -226,11 +280,17 @@ public class InventoryListViewModel : BindableBase, INavigationAware
                 {
                     await ComputeSizeForEntryAsync(entry, token);
                     var done = Interlocked.Increment(ref _sizeProgress);
-                    await Application.Current.Dispatcher.InvokeAsync(() =>
+
+                    // Throttle UI ticks: every 5 entries (and the final one) is plenty
+                    // of feedback without flooding the dispatcher with hundreds of updates.
+                    if (done % 5 == 0 || done == entries.Count)
                     {
-                        RaisePropertyChanged(nameof(SizeProgress));
-                        RaisePropertyChanged(nameof(StatusText));
-                    });
+                        Application.Current.Dispatcher.BeginInvoke(() =>
+                        {
+                            RaisePropertyChanged(nameof(SizeProgress));
+                            RaisePropertyChanged(nameof(StatusText));
+                        });
+                    }
                 });
         }
         catch (OperationCanceledException)
@@ -266,8 +326,8 @@ public class InventoryListViewModel : BindableBase, INavigationAware
             }
         }
 
-        // Marshal property update to the UI thread — Parallel.ForEachAsync runs us on a worker.
-        await Application.Current.Dispatcher.InvokeAsync(() =>
+        // Fire-and-forget UI dispatch so workers don't block on each property update.
+        Application.Current.Dispatcher.BeginInvoke(() =>
         {
             entry.SizeBytes = sizeValue;
         });

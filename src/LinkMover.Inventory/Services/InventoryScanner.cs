@@ -18,12 +18,15 @@ public sealed class InventoryScanner : IInventoryScanner
         _junctionService = junctionService;
     }
 
-    public Task<IReadOnlyList<InventoryEntry>> ScanAsync(IEnumerable<string> roots, CancellationToken ct)
+    public Task ScanAsync(
+        IEnumerable<string> roots,
+        IProgress<InventoryEntry>? onEntry,
+        IProgress<string>? onCurrentPath,
+        CancellationToken ct)
     {
-        return Task.Run<IReadOnlyList<InventoryEntry>>(() =>
+        return Task.Run(() =>
         {
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var entries = new List<InventoryEntry>();
 
             foreach (var root in roots)
             {
@@ -33,6 +36,8 @@ public sealed class InventoryScanner : IInventoryScanner
                     continue;
                 }
 
+                onCurrentPath?.Report(root);
+
                 foreach (var path in _fileSystem.EnumerateReparsePoints(root, ct))
                 {
                     ct.ThrowIfCancellationRequested();
@@ -41,21 +46,21 @@ public sealed class InventoryScanner : IInventoryScanner
                         continue;
                     }
 
+                    onCurrentPath?.Report(path);
+
                     var info = _junctionService.Inspect(path);
                     if (info is null)
                     {
                         continue;
                     }
 
-                    entries.Add(new InventoryEntry(
+                    onEntry?.Report(new InventoryEntry(
                         sourcePath: info.Source,
                         targetPath: info.Target,
                         created: info.Created,
                         targetExists: info.TargetExists));
                 }
             }
-
-            return entries;
         }, ct);
     }
 }
