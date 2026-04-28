@@ -3,6 +3,7 @@
 // See LICENSE for the full Apache 2.0 text and Commons Clause restriction.
 
 using LinkMover.Core.Navigation;
+using LinkMover.Inventory.Services;
 using LinkMover.Inventory.ViewModels;
 using LinkMover.Inventory.Views;
 using Prism.Ioc;
@@ -16,6 +17,8 @@ public class InventoryModule : IModule
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterSingleton<IInventoryScanner, InventoryScanner>();
+
         containerRegistry.RegisterForNavigation<InventoryListView, InventoryListViewModel>(ViewNames.InventoryList);
     }
 }

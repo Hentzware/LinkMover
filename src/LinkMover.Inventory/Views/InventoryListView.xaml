@@ -7,6 +7,58 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid Margin="24">
-        <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="SemiBold" VerticalAlignment="Top"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            <Button Content="Aktualisieren" HorizontalAlignment="Right" Padding="16,4"
+                    Command="{Binding RefreshCommand}"/>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Text="Suche Junctions in User-Profile, AppData, ProgramData…"
+                   Foreground="#666" Margin="0,0,0,8"
+                   Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Entries}"
+                  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                  IsReadOnly="True" HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal" BorderThickness="0,1,0,0" BorderBrush="#DDD"
+                  RowHeight="32">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Quelle (Junction)" Binding="{Binding SourcePath}" Width="*"
+                                    FontFamily="Consolas"/>
+                <DataGridTextColumn Header="Ziel (Daten)" Binding="{Binding TargetPath}" Width="*"
+                                    FontFamily="Consolas"/>
+                <DataGridTextColumn Header="Erstellt" Binding="{Binding Created, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                    Width="140"/>
+                <DataGridTemplateColumn Header="Ziel" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Padding="4,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding TargetExists}" Value="True">
+                                                <Setter Property="Text" Value="OK"/>
+                                                <Setter Property="Foreground" Value="#2E7D32"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding TargetExists}" Value="False">
+                                                <Setter Property="Text" Value="Fehlt"/>
+                                                <Setter Property="Foreground" Value="#C62828"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>
