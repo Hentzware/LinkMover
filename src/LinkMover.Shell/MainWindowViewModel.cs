@@ -5,6 +5,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using LinkMover.Core.Navigation;
+using MahApps.Metro.IconPacks;
 using Prism.Mvvm;
 using Prism.Navigation.Regions;
 
@@ -20,9 +21,9 @@ public class MainWindowViewModel : BindableBase
         _regionManager = regionManager;
         NavigationItems = new ObservableCollection<NavigationItem>
         {
-            new("Erstellen", ViewNames.JunctionWizardHost),
-            new("Inventar", ViewNames.InventoryList),
-            new("Analyzer", ViewNames.AnalyzerHome),
+            new("Erstellen", ViewNames.JunctionWizardHost, PackIconMaterialKind.LinkPlus),
+            new("Inventar", ViewNames.InventoryList, PackIconMaterialKind.FormatListBulleted),
+            new("Analyzer", ViewNames.AnalyzerHome, PackIconMaterialKind.ChartArc),
         };
 
         regionManager.Regions.CollectionChanged += OnRegionsChanged;
@@ -85,4 +86,4 @@ public class MainWindowViewModel : BindableBase
     }
 }
 
-public sealed record NavigationItem(string Title, string ViewName);
+public sealed record NavigationItem(string Title, string ViewName, PackIconMaterialKind Icon);

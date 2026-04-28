@@ -7,6 +7,7 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:prism="http://prismlibrary.com/"
                  xmlns:nav="clr-namespace:LinkMover.Core.Navigation;assembly=LinkMover.Core"
                  mc:Ignorable="d"
@@ -16,6 +17,14 @@
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                  BorderThickness="0"
                  WindowStartupLocation="CenterScreen">
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button Click="OnAboutClick" ToolTip="Über LinkMover">
+                <iconPacks:PackIconMaterial Kind="InformationOutline" Width="16" Height="16"/>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -44,7 +53,13 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Title}" FontSize="15"/>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="{Binding Icon}"
+                                                        Width="20" Height="20"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,0,14,0"/>
+                            <TextBlock Text="{Binding Title}" FontSize="15" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -58,7 +73,7 @@
                 BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
                 BorderThickness="0,1,0,0"
                 Padding="16,6">
-            <TextBlock Text="LinkMover" Foreground="{DynamicResource MahApps.Brushes.Gray3}" FontSize="11"/>
+            <TextBlock Text="LinkMover" Foreground="{DynamicResource LinkMover.Brushes.MutedFaint}" FontSize="11"/>
         </Border>
     </Grid>
 </mah:MetroWindow>

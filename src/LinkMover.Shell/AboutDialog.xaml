@@ -1,0 +1,60 @@
+<!-- Copyright (c) 2026 Henning Entz
+     SPDX-License-Identifier: Apache-2.0 WITH LicenseRef-Commons-Clause
+     See LICENSE for the full Apache 2.0 text and Commons Clause restriction. -->
+<Window x:Class="LinkMover.Shell.AboutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        Title="Über LinkMover" Height="380" Width="480"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        ShowInTaskbar="False">
+    <Grid Margin="32,28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <iconPacks:PackIconMaterial Kind="LinkPlus" Width="40" Height="40"
+                                        Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                        VerticalAlignment="Center"/>
+            <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="LinkMover" FontSize="24" FontWeight="SemiBold"/>
+                <TextBlock Text="NTFS Junction Manager" Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock Grid.Row="1" Margin="0,0,0,12">
+            <Run Text="Version " Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
+            <Run Text="{Binding Version, Mode=OneWay}" FontFamily="Consolas"/>
+        </TextBlock>
+
+        <TextBlock Grid.Row="2" Margin="0,0,0,12" TextWrapping="Wrap">
+            <Run Text="Lizenz: " Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
+            <Run Text="Apache 2.0 with Commons Clause"/>
+            <LineBreak/>
+            <Run Text="Copyright (c) 2026 Henning Entz" Foreground="{DynamicResource LinkMover.Brushes.MutedFaint}"/>
+        </TextBlock>
+
+        <StackPanel Grid.Row="3" VerticalAlignment="Top">
+            <TextBlock Margin="0,8,0,4">
+                <Hyperlink NavigateUri="https://github.com/Hentzware/LinkMover"
+                           RequestNavigate="OnHyperlinkNavigate">
+                    Quellcode auf GitHub
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="0,4,0,0">
+                <Hyperlink NavigateUri="https://github.com/Hentzware/LinkMover/blob/master/LICENSE"
+                           RequestNavigate="OnHyperlinkNavigate">
+                    Vollständiger Lizenztext
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+
+        <Button Grid.Row="4" Content="Schließen" Padding="20,6"
+                HorizontalAlignment="Right" IsCancel="True" Click="OnCloseClick"/>
+    </Grid>
+</Window>
