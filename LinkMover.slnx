@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="src/LinkMover.Shell/LinkMover.Shell.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/LinkMover.Core/LinkMover.Core.csproj" />
+    <Project Path="src/LinkMover.Shell/LinkMover.Shell.csproj" />
+  </Folder>
 </Solution>
