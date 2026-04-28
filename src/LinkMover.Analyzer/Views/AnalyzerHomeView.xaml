@@ -5,8 +5,77 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:models="clr-namespace:LinkMover.Analyzer.Models"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid Margin="24">
-        <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="SemiBold" VerticalAlignment="Top"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Pfad:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"
+                     Padding="6,4" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Content="Durchsuchen…" Margin="8,0,0,0" Padding="12,4"
+                    Command="{Binding BrowseCommand}"/>
+            <Button Grid.Column="3" Content="Scan starten" Margin="8,0,0,0" Padding="16,4" FontWeight="SemiBold"
+                    Command="{Binding ScanCommand}"/>
+            <Button Grid.Column="4" Content="Abbrechen" Margin="4,0,0,0" Padding="12,4"
+                    Command="{Binding CancelCommand}"/>
+        </Grid>
+
+        <Border Grid.Row="2" Padding="12,8" Background="#F5F5F5" Margin="0,0,0,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding StatusText}" Foreground="#666"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="1" Foreground="#666">
+                    <Run Text="{Binding FilesScanned, StringFormat=N0, Mode=OneWay}"/>
+                    <Run Text=" Dateien"/>
+                </TextBlock>
+            </Grid>
+        </Border>
+
+        <TreeView Grid.Row="3" ItemsSource="{Binding Roots}"
+                  BorderBrush="#DDD" BorderThickness="1"
+                  VirtualizingPanel.IsVirtualizing="True"
+                  VirtualizingPanel.VirtualizationMode="Recycling">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type models:TreeNodeViewModel}" ItemsSource="{Binding Children}">
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="200"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="220"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SizeText}" VerticalAlignment="Center"
+                                   HorizontalAlignment="Right" Margin="8,0" FontFamily="Consolas"/>
+                        <TextBlock Grid.Column="2" Text="{Binding FileCountText}" VerticalAlignment="Center"
+                                   HorizontalAlignment="Right" Margin="8,0" Foreground="#888" FontSize="11"/>
+                        <Border Grid.Column="3" Background="#42A5F5" Height="12"
+                                Width="{Binding BarWidth}" HorizontalAlignment="Left"
+                                VerticalAlignment="Center" CornerRadius="2"/>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
     </Grid>
 </UserControl>
