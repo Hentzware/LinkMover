@@ -1,5 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <ItemGroup>
+      <ProjectReference Include="..\LinkMover.Core\LinkMover.Core.csproj" />
+      <ProjectReference Include="..\LinkMover.JunctionCreation\LinkMover.JunctionCreation.csproj" />
+      <ProjectReference Include="..\LinkMover.Inventory\LinkMover.Inventory.csproj" />
+      <ProjectReference Include="..\LinkMover.Analyzer\LinkMover.Analyzer.csproj" />
+    </ItemGroup>
+
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0-windows</TargetFramework>
