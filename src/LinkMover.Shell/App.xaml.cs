@@ -33,6 +33,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterSingleton<IRobocopyService, RobocopyService>();
         containerRegistry.RegisterSingleton<IVerificationService, VerificationService>();
         containerRegistry.RegisterSingleton<IRestartManagerService, RestartManagerService>();
+        containerRegistry.RegisterSingleton<IDiskScanner, DiskScanner>();
     }
 
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
