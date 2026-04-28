@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace LinkMover;
+namespace LinkMover.Shell;
 
 /// <summary>
 /// Interaction logic for App.xaml
