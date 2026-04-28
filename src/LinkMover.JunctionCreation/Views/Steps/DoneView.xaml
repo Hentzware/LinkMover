@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Padding="16" Margin="0,0,0,16"
-                Background="#E8F5E9" BorderBrush="#2E7D32" BorderThickness="1">
+                Background="{DynamicResource LinkMover.Brushes.SuccessBackground}" BorderBrush="{DynamicResource LinkMover.Brushes.Success}" BorderThickness="1">
             <TextBlock Text="{Binding Headline}" FontWeight="SemiBold" FontSize="14"/>
         </Border>
 
@@ -33,24 +33,24 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Quelle (Junction)" Foreground="#666"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Quelle (Junction)" Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Context.Source}" FontFamily="Consolas"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Ziel (Daten)" Foreground="#666" Margin="0,4,0,0"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Ziel (Daten)" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,4,0,0"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Context.Target}" FontFamily="Consolas" Margin="0,4,0,0"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Übertragene Bytes" Foreground="#666" Margin="0,4,0,0"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Übertragene Bytes" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,4,0,0"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding BytesText}" Margin="0,4,0,0"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Übertragene Dateien" Foreground="#666" Margin="0,4,0,0"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Übertragene Dateien" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,4,0,0"/>
             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding FilesText}" Margin="0,4,0,0"/>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Dauer" Foreground="#666" Margin="0,4,0,0"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Dauer" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,4,0,0"/>
             <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ElapsedText}" Margin="0,4,0,0"/>
         </Grid>
 
         <TextBlock Grid.Row="2" Text="Trockenlauf — keine echten Änderungen am Dateisystem."
-                   Foreground="#EF6C00" FontWeight="SemiBold"
+                   Foreground="{DynamicResource LinkMover.Brushes.Warning}" FontWeight="SemiBold"
                    Visibility="{Binding Context.DryRun, Converter={StaticResource BoolToVis}}"/>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">

@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Text="Vorab-Prüfungen" FontSize="16" Margin="0,0,0,4"/>
-        <TextBlock Grid.Row="1" Foreground="#666" Margin="0,0,0,16" TextWrapping="Wrap">
+        <TextBlock Grid.Row="1" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,0,0,16" TextWrapping="Wrap">
             <Run Text="Quelle: "/><Run Text="{Binding Context.Source, Mode=OneWay}" FontFamily="Consolas"/>
             <LineBreak/>
             <Run Text="Ziel: "/><Run Text="{Binding Context.Target, Mode=OneWay}" FontFamily="Consolas"/>
@@ -25,12 +25,12 @@
 
         <TextBlock Grid.Row="2" Text="Prüfung läuft…"
                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
-                   Foreground="#666" Margin="0,0,0,12"/>
+                   Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,0,0,12"/>
 
         <ItemsControl Grid.Row="3" ItemsSource="{Binding Context.PreFlight.Checks}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Padding="12,10" Margin="0,0,0,4" BorderBrush="#EEE" BorderThickness="0,0,0,1">
+                    <Border Padding="12,10" Margin="0,0,0,4" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="80"/>
@@ -42,13 +42,13 @@
                                     <Style TargetType="TextBlock">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Severity}" Value="{x:Static models:Severity.Error}">
-                                                <Setter Property="Foreground" Value="#C62828"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Danger}"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Severity}" Value="{x:Static models:Severity.Warning}">
-                                                <Setter Property="Foreground" Value="#EF6C00"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Warning}"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Severity}" Value="{x:Static models:Severity.Ok}">
-                                                <Setter Property="Foreground" Value="#2E7D32"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Success}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

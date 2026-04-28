@@ -23,10 +23,10 @@
                      Value="{Binding BytesCopied, Mode=OneWay}"
                      IsIndeterminate="{Binding IsIndeterminate}"/>
 
-        <TextBlock Grid.Row="2" Text="{Binding ProgressLabel}" Foreground="#666"
+        <TextBlock Grid.Row="2" Text="{Binding ProgressLabel}" Foreground="{DynamicResource LinkMover.Brushes.Muted}"
                    Margin="0,8,0,0"/>
 
-        <TextBlock Grid.Row="3" Text="Aktuelle Datei:" Foreground="#888" Margin="0,16,0,2"/>
+        <TextBlock Grid.Row="3" Text="Aktuelle Datei:" Foreground="{DynamicResource LinkMover.Brushes.MutedFaint}" Margin="0,16,0,2"/>
         <TextBlock Grid.Row="4" Text="{Binding CurrentFile}" FontFamily="Consolas"
                    TextTrimming="CharacterEllipsis"/>
 

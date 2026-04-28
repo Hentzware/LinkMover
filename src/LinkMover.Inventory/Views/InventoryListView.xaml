@@ -32,28 +32,28 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Filter:" VerticalAlignment="Center" Foreground="#666"/>
+            <TextBlock Grid.Column="0" Text="Filter:" VerticalAlignment="Center" Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
             <TextBox Grid.Column="1" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged, Delay=150}"
                      Padding="6,4" VerticalAlignment="Center"/>
             <Button Grid.Column="2" Content="Leeren" Margin="8,0,0,0" Padding="12,4"
                     Command="{Binding ClearFilterCommand}"/>
-            <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="#888">
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{DynamicResource LinkMover.Brushes.MutedFaint}">
                 <Run Text="{Binding VisibleCount, Mode=OneWay}"/>
                 <Run Text=" von "/>
                 <Run Text="{Binding Entries.Count, Mode=OneWay}"/>
             </TextBlock>
         </Grid>
 
-        <Border Grid.Row="2" Padding="12,8" Background="#F5F5F5" Margin="0,0,0,8"
+        <Border Grid.Row="2" Padding="12,8" Background="{DynamicResource MahApps.Brushes.Gray10}" Margin="0,0,0,8"
                 Visibility="{Binding HasStatus, Converter={StaticResource BoolToVis}}">
-            <TextBlock Text="{Binding StatusText}" Foreground="#666"/>
+            <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
         </Border>
 
         <DataGrid Grid.Row="3" ItemsSource="{Binding EntriesView}"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                   IsReadOnly="True" HeadersVisibility="Column"
                   CanUserSortColumns="True"
-                  GridLinesVisibility="Horizontal" BorderThickness="0,1,0,0" BorderBrush="#DDD"
+                  GridLinesVisibility="Horizontal" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
                   RowHeight="32">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Quelle (Junction)" Binding="{Binding SourcePath}" Width="*"
@@ -84,11 +84,11 @@
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding TargetExists}" Value="True">
                                                 <Setter Property="Text" Value="OK"/>
-                                                <Setter Property="Foreground" Value="#2E7D32"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Success}"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding TargetExists}" Value="False">
                                                 <Setter Property="Text" Value="Fehlt"/>
-                                                <Setter Property="Foreground" Value="#C62828"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Danger}"/>
                                                 <Setter Property="FontWeight" Value="SemiBold"/>
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -114,7 +114,7 @@
                                         Command="{Binding DataContext.RestoreCommand,
                                                           RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
-                                <Button Content="Junction entfernen" Padding="8,2" Foreground="#C62828"
+                                <Button Content="Junction entfernen" Padding="8,2" Foreground="{DynamicResource LinkMover.Brushes.Danger}"
                                         Command="{Binding DataContext.RemoveJunctionCommand,
                                                           RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>

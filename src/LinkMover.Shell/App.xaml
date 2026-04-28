@@ -14,6 +14,16 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+            <!-- Semantic brushes used across views for status / outcome / muted info. -->
+            <SolidColorBrush x:Key="LinkMover.Brushes.Success" Color="#2E7D32"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.SuccessBackground" Color="#E8F5E9"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.Warning" Color="#EF6C00"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.WarningBackground" Color="#FFF3E0"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.Danger" Color="#C62828"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.DangerBackground" Color="#FFEBEE"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.Muted" Color="#666666"/>
+            <SolidColorBrush x:Key="LinkMover.Brushes.MutedFaint" Color="#888888"/>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

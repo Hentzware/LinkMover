@@ -18,14 +18,14 @@
         <TextBlock Grid.Row="0" Text="Junction-Ziel anpassen"
                    FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12"/>
 
-        <Border Grid.Row="1" Padding="12" Background="#F5F5F5" Margin="0,0,0,16">
+        <Border Grid.Row="1" Padding="12" Background="{DynamicResource MahApps.Brushes.Gray10}" Margin="0,0,0,16">
             <StackPanel>
                 <TextBlock>
-                    <Run Text="Junction: " Foreground="#666"/>
+                    <Run Text="Junction: " Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
                     <Run Text="{Binding Source, Mode=OneWay}" FontFamily="Consolas"/>
                 </TextBlock>
                 <TextBlock Margin="0,4,0,0">
-                    <Run Text="Aktuelles Ziel: " Foreground="#666"/>
+                    <Run Text="Aktuelles Ziel: " Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
                     <Run Text="{Binding OldTarget, Mode=OneWay}" FontFamily="Consolas"/>
                 </TextBlock>
             </StackPanel>
@@ -60,8 +60,8 @@
             <ProgressBar Height="20" Minimum="0" Maximum="{Binding TotalBytes}"
                          Value="{Binding BytesProcessed, Mode=OneWay}"
                          IsIndeterminate="{Binding IsIndeterminate}"/>
-            <TextBlock Text="{Binding ProgressDetail}" Foreground="#666" Margin="0,4,0,8"/>
-            <TextBlock Text="Aktuelle Datei:" Foreground="#888" Margin="0,8,0,2"/>
+            <TextBlock Text="{Binding ProgressDetail}" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,4,0,8"/>
+            <TextBlock Text="Aktuelle Datei:" Foreground="{DynamicResource LinkMover.Brushes.MutedFaint}" Margin="0,8,0,2"/>
             <TextBlock Text="{Binding CurrentFile}" FontFamily="Consolas" TextTrimming="CharacterEllipsis"/>
         </StackPanel>
 
@@ -71,10 +71,10 @@
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsResultSuccess}" Value="True">
-                                <Setter Property="Foreground" Value="#2E7D32"/>
+                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Success}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding IsResultSuccess}" Value="False">
-                                <Setter Property="Foreground" Value="#C62828"/>
+                                <Setter Property="Foreground" Value="{DynamicResource LinkMover.Brushes.Danger}"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

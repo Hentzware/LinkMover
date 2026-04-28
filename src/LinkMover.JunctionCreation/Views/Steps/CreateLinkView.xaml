@@ -19,15 +19,15 @@
         <TextBlock Grid.Row="0" Text="Junction erstellen" FontSize="16" Margin="0,0,0,16"/>
 
         <TextBlock Grid.Row="1" Margin="0,0,0,4">
-            <Run Text="Verknüpfe " Foreground="#666"/>
+            <Run Text="Verknüpfe " Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
             <Run Text="{Binding Context.Source, Mode=OneWay}" FontFamily="Consolas"/>
         </TextBlock>
         <TextBlock Grid.Row="2" Margin="0,0,0,16">
-            <Run Text="auf " Foreground="#666"/>
+            <Run Text="auf " Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
             <Run Text="{Binding Context.Target, Mode=OneWay}" FontFamily="Consolas"/>
         </TextBlock>
 
-        <TextBlock Grid.Row="3" Text="{Binding StatusText}" Foreground="#666" Margin="0,8,0,0"/>
+        <TextBlock Grid.Row="3" Text="{Binding StatusText}" Foreground="{DynamicResource LinkMover.Brushes.Muted}" Margin="0,8,0,0"/>
 
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0"
                     Visibility="{Binding ShowError, Converter={StaticResource BoolToVis}}">

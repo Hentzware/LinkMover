@@ -19,7 +19,7 @@
 
         <TextBlock Grid.Row="1" Text="Vergleiche Quelle und Ziel…"
                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
-                   Foreground="#666"/>
+                   Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
 
         <StackPanel Grid.Row="2" Visibility="{Binding HasResult, Converter={StaticResource BoolToVis}}">
             <Border Padding="16" Margin="0,0,0,16">
@@ -27,12 +27,12 @@
                     <Style TargetType="Border">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Context.VerifyResult.Match}" Value="True">
-                                <Setter Property="Background" Value="#E8F5E9"/>
-                                <Setter Property="BorderBrush" Value="#2E7D32"/>
+                                <Setter Property="Background" Value="{DynamicResource LinkMover.Brushes.SuccessBackground}"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource LinkMover.Brushes.Success}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Context.VerifyResult.Match}" Value="False">
-                                <Setter Property="Background" Value="#FFEBEE"/>
-                                <Setter Property="BorderBrush" Value="#C62828"/>
+                                <Setter Property="Background" Value="{DynamicResource LinkMover.Brushes.DangerBackground}"/>
+                                <Setter Property="BorderBrush" Value="{DynamicResource LinkMover.Brushes.Danger}"/>
                             </DataTrigger>
                         </Style.Triggers>
                         <Setter Property="BorderThickness" Value="1"/>
@@ -57,11 +57,11 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="Quelle" FontWeight="SemiBold"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="Ziel" FontWeight="SemiBold"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Anzahl Dateien" Foreground="#666"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Anzahl Dateien" Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Context.VerifyResult.SourceFileCount}"/>
                 <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Context.VerifyResult.TargetFileCount}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Bytes" Foreground="#666"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Bytes" Foreground="{DynamicResource LinkMover.Brushes.Muted}"/>
                 <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SourceBytesFormatted}"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding TargetBytesFormatted}"/>
             </Grid>
@@ -72,7 +72,7 @@
                           Visibility="{Binding HasMissingFiles, Converter={StaticResource BoolToVis}}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontFamily="Consolas" Foreground="#C62828"/>
+                        <TextBlock Text="{Binding}" FontFamily="Consolas" Foreground="{DynamicResource LinkMover.Brushes.Danger}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

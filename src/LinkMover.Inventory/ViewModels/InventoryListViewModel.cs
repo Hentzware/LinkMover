@@ -285,7 +285,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
                     // of feedback without flooding the dispatcher with hundreds of updates.
                     if (done % 5 == 0 || done == entries.Count)
                     {
-                        Application.Current.Dispatcher.BeginInvoke(() =>
+                        _ = Application.Current.Dispatcher.BeginInvoke(() =>
                         {
                             RaisePropertyChanged(nameof(SizeProgress));
                             RaisePropertyChanged(nameof(StatusText));
@@ -327,7 +327,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         }
 
         // Fire-and-forget UI dispatch so workers don't block on each property update.
-        Application.Current.Dispatcher.BeginInvoke(() =>
+        _ = Application.Current.Dispatcher.BeginInvoke(() =>
         {
             entry.SizeBytes = sizeValue;
         });

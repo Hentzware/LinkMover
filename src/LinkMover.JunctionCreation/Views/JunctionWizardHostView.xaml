@@ -15,15 +15,15 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Padding="24,16" Background="#F5F5F5" BorderBrush="#DDD" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Padding="24,16" Background="{DynamicResource MahApps.Brushes.Gray10}" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1">
             <TextBlock Text="Junction erstellen" FontSize="22" FontWeight="SemiBold"/>
         </Border>
 
         <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static nav:RegionNames.WizardStep}"/>
 
-        <Border Grid.Row="2" Padding="24,12" BorderBrush="#DDD" BorderThickness="0,1,0,0" Background="#FAFAFA">
+        <Border Grid.Row="2" Padding="24,12" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,1,0,0" Background="{DynamicResource MahApps.Brushes.Gray10}">
             <Grid>
-                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#666"
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource LinkMover.Brushes.Muted}"
                            Text="{Binding StepLabel}"/>
                 <Button HorizontalAlignment="Right" Content="Abbrechen" Padding="20,6"
                         Command="{Binding CancelCommand}"/>

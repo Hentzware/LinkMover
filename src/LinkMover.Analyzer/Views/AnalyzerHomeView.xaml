@@ -36,15 +36,15 @@
                     Command="{Binding CancelCommand}"/>
         </Grid>
 
-        <Border Grid.Row="2" Padding="12,8" Background="#F5F5F5" Margin="0,0,0,8">
+        <Border Grid.Row="2" Padding="12,8" Background="{DynamicResource MahApps.Brushes.Gray10}" Margin="0,0,0,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding StatusText}" Foreground="#666"
+                <TextBlock Grid.Column="0" Text="{Binding StatusText}" Foreground="{DynamicResource LinkMover.Brushes.Muted}"
                            TextTrimming="CharacterEllipsis"/>
-                <TextBlock Grid.Column="1" Foreground="#666">
+                <TextBlock Grid.Column="1" Foreground="{DynamicResource LinkMover.Brushes.Muted}">
                     <Run Text="{Binding FilesScanned, StringFormat=N0, Mode=OneWay}"/>
                     <Run Text=" Dateien"/>
                 </TextBlock>
@@ -52,7 +52,7 @@
         </Border>
 
         <TreeView Grid.Row="3" ItemsSource="{Binding Roots}"
-                  BorderBrush="#DDD" BorderThickness="1"
+                  BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="1"
                   VirtualizingPanel.IsVirtualizing="True"
                   VirtualizingPanel.VirtualizationMode="Recycling">
             <TreeView.Resources>
@@ -82,8 +82,8 @@
                         <TextBlock Grid.Column="1" Text="{Binding SizeText}" VerticalAlignment="Center"
                                    HorizontalAlignment="Right" Margin="8,0" FontFamily="Consolas"/>
                         <TextBlock Grid.Column="2" Text="{Binding FileCountText}" VerticalAlignment="Center"
-                                   HorizontalAlignment="Right" Margin="8,0" Foreground="#888" FontSize="11"/>
-                        <Border Grid.Column="3" Background="#42A5F5" Height="12"
+                                   HorizontalAlignment="Right" Margin="8,0" Foreground="{DynamicResource LinkMover.Brushes.MutedFaint}" FontSize="11"/>
+                        <Border Grid.Column="3" Background="{DynamicResource MahApps.Brushes.Accent}" Height="12"
                                 Width="{Binding BarWidth}" HorizontalAlignment="Left"
                                 VerticalAlignment="Center" CornerRadius="2"/>
                     </Grid>
