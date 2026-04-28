@@ -1,6 +1,9 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/LinkMover.Analyzer/LinkMover.Analyzer.csproj" />
     <Project Path="src/LinkMover.Core/LinkMover.Core.csproj" />
+    <Project Path="src/LinkMover.Inventory/LinkMover.Inventory.csproj" />
+    <Project Path="src/LinkMover.JunctionCreation/LinkMover.JunctionCreation.csproj" />
     <Project Path="src/LinkMover.Shell/LinkMover.Shell.csproj" />
   </Folder>
 </Solution>
