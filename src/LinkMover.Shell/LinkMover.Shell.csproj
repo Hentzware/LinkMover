@@ -7,6 +7,10 @@
       <ProjectReference Include="..\LinkMover.Analyzer\LinkMover.Analyzer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Prism.DryIoc" Version="9.0.537" />
+    </ItemGroup>
+
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0-windows</TargetFramework>
