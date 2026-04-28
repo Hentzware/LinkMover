@@ -1,0 +1,95 @@
+<!-- Copyright (c) 2026 Henning Entz
+     SPDX-License-Identifier: Apache-2.0 WITH LicenseRef-Commons-Clause
+     See LICENSE for the full Apache 2.0 text and Commons Clause restriction. -->
+<Window x:Class="LinkMover.Inventory.Views.RepointDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Junction-Ziel anpassen" Height="480" Width="680"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        ShowInTaskbar="False">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Junction-Ziel anpassen"
+                   FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+        <Border Grid.Row="1" Padding="12" Background="#F5F5F5" Margin="0,0,0,16">
+            <StackPanel>
+                <TextBlock>
+                    <Run Text="Junction: " Foreground="#666"/>
+                    <Run Text="{Binding Source, Mode=OneWay}" FontFamily="Consolas"/>
+                </TextBlock>
+                <TextBlock Margin="0,4,0,0">
+                    <Run Text="Aktuelles Ziel: " Foreground="#666"/>
+                    <Run Text="{Binding OldTarget, Mode=OneWay}" FontFamily="Consolas"/>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="2" Visibility="{Binding ShowConfirm, Converter={StaticResource BoolToVis}}">
+            <TextBlock TextWrapping="Wrap" Margin="0,0,0,16">
+                Daten werden vom aktuellen Ziel auf das neue Ziel kopiert. Anschließend wird die Junction
+                entfernt und neu auf das neue Ziel angelegt. Die Quell-Junction bleibt am gleichen Pfad,
+                Programme bemerken den Wechsel nicht.
+            </TextBlock>
+
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Neues Ziel:" VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1" Text="{Binding NewTarget, UpdateSourceTrigger=PropertyChanged}"
+                         Padding="6,4" VerticalAlignment="Center" FontFamily="Consolas"/>
+                <Button Grid.Column="2" Content="Durchsuchen…" Margin="8,0,0,0" Padding="12,4"
+                        Command="{Binding BrowseCommand}"/>
+            </Grid>
+
+            <CheckBox Content="Altes Ziel nach Erfolg löschen" IsChecked="{Binding DeleteOldTargetAfter}"
+                      Margin="100,8,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Visibility="{Binding ShowProgress, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="{Binding StageLabel}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+            <ProgressBar Height="20" Minimum="0" Maximum="{Binding TotalBytes}"
+                         Value="{Binding BytesProcessed, Mode=OneWay}"
+                         IsIndeterminate="{Binding IsIndeterminate}"/>
+            <TextBlock Text="{Binding ProgressDetail}" Foreground="#666" Margin="0,4,0,8"/>
+            <TextBlock Text="Aktuelle Datei:" Foreground="#888" Margin="0,8,0,2"/>
+            <TextBlock Text="{Binding CurrentFile}" FontFamily="Consolas" TextTrimming="CharacterEllipsis"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Visibility="{Binding ShowResult, Converter={StaticResource BoolToVis}}">
+            <TextBlock Text="{Binding ResultHeadline}" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsResultSuccess}" Value="True">
+                                <Setter Property="Foreground" Value="#2E7D32"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsResultSuccess}" Value="False">
+                                <Setter Property="Foreground" Value="#C62828"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Text="{Binding ResultDetail}" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Abbrechen" Command="{Binding CancelCommand}" Padding="20,6" Margin="0,0,8,0"
+                    Visibility="{Binding ShowCancelButton, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Starten" Command="{Binding StartCommand}" Padding="24,8" FontWeight="SemiBold"
+                    Visibility="{Binding ShowStartButton, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Schließen" Command="{Binding CloseCommand}" Padding="20,6"
+                    Visibility="{Binding ShowCloseButton, Converter={StaticResource BoolToVis}}"/>
+        </StackPanel>
+    </Grid>
+</Window>

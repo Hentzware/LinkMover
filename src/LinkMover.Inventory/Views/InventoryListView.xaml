@@ -67,12 +67,16 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Aktionen" Width="380">
+                <DataGridTemplateColumn Header="Aktionen" Width="480">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="Im Explorer" Padding="8,2" Margin="0,0,4,0"
                                         Command="{Binding DataContext.OpenInExplorerCommand,
+                                                          RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"/>
+                                <Button Content="Ziel anpassen" Padding="8,2" Margin="0,0,4,0"
+                                        Command="{Binding DataContext.RepointCommand,
                                                           RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"/>
                                 <Button Content="Wiederherstellen" Padding="8,2" Margin="0,0,4,0"

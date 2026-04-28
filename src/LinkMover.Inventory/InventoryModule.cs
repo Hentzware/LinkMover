@@ -3,6 +3,7 @@
 // See LICENSE for the full Apache 2.0 text and Commons Clause restriction.
 
 using LinkMover.Core.Navigation;
+using LinkMover.Inventory.Repoint;
 using LinkMover.Inventory.Restore;
 using LinkMover.Inventory.Services;
 using LinkMover.Inventory.ViewModels;
@@ -20,6 +21,7 @@ public class InventoryModule : IModule
     {
         containerRegistry.RegisterSingleton<IInventoryScanner, InventoryScanner>();
         containerRegistry.RegisterSingleton<IJunctionRestoreOrchestrator, JunctionRestoreOrchestrator>();
+        containerRegistry.RegisterSingleton<IJunctionRepointOrchestrator, JunctionRepointOrchestrator>();
 
         containerRegistry.RegisterForNavigation<InventoryListView, InventoryListViewModel>(ViewNames.InventoryList);
     }

@@ -8,6 +8,7 @@ using System.Windows;
 using LinkMover.Core.Abstractions;
 using LinkMover.Core.Events;
 using LinkMover.Inventory.Models;
+using LinkMover.Inventory.Repoint;
 using LinkMover.Inventory.Restore;
 using LinkMover.Inventory.Services;
 using LinkMover.Inventory.Views;
@@ -23,6 +24,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     private readonly IInventoryScanner _scanner;
     private readonly IJunctionService _junctionService;
     private readonly IJunctionRestoreOrchestrator _restoreOrchestrator;
+    private readonly IJunctionRepointOrchestrator _repointOrchestrator;
     private readonly IFileSystemService _fileSystem;
     private readonly IEventAggregator _eventAggregator;
     private CancellationTokenSource? _cts;
@@ -32,12 +34,14 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         IInventoryScanner scanner,
         IJunctionService junctionService,
         IJunctionRestoreOrchestrator restoreOrchestrator,
+        IJunctionRepointOrchestrator repointOrchestrator,
         IFileSystemService fileSystem,
         IEventAggregator eventAggregator)
     {
         _scanner = scanner;
         _junctionService = junctionService;
         _restoreOrchestrator = restoreOrchestrator;
+        _repointOrchestrator = repointOrchestrator;
         _fileSystem = fileSystem;
         _eventAggregator = eventAggregator;
 
@@ -46,6 +50,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         OpenInExplorerCommand = new DelegateCommand<InventoryEntry>(OpenInExplorer);
         RemoveJunctionCommand = new DelegateCommand<InventoryEntry>(async entry => await RemoveJunctionAsync(entry));
         RestoreCommand = new DelegateCommand<InventoryEntry>(Restore);
+        RepointCommand = new DelegateCommand<InventoryEntry>(Repoint);
 
         eventAggregator.GetEvent<JunctionCreatedEvent>().Subscribe(info =>
         {
@@ -73,6 +78,7 @@ public class InventoryListViewModel : BindableBase, INavigationAware
     public DelegateCommand<InventoryEntry> OpenInExplorerCommand { get; }
     public DelegateCommand<InventoryEntry> RemoveJunctionCommand { get; }
     public DelegateCommand<InventoryEntry> RestoreCommand { get; }
+    public DelegateCommand<InventoryEntry> RepointCommand { get; }
 
     public string Title => "Inventar bestehender Junctions";
 
@@ -212,6 +218,34 @@ public class InventoryListViewModel : BindableBase, INavigationAware
         {
             Entries.Remove(entry);
             _eventAggregator.GetEvent<JunctionRemovedEvent>().Publish(entry.SourcePath);
+        }
+    }
+
+    private void Repoint(InventoryEntry entry)
+    {
+        if (entry is null) return;
+
+        var vm = new RepointDialogViewModel(_repointOrchestrator, entry.SourcePath, entry.TargetPath);
+        var dialog = new RepointDialog
+        {
+            DataContext = vm,
+            Owner = Application.Current.MainWindow
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            // Junction now points at the new target — refresh the row in place.
+            var info = _junctionService.Inspect(entry.SourcePath);
+            if (info is not null)
+            {
+                var index = Entries.IndexOf(entry);
+                if (index >= 0)
+                {
+                    var fresh = new InventoryEntry(info.Source, info.Target, info.Created, info.TargetExists);
+                    Entries[index] = fresh;
+                    _ = ComputeSizeForEntryAsync(fresh, _cts?.Token ?? CancellationToken.None);
+                }
+            }
         }
     }
 }
