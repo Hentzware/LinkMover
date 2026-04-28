@@ -23,5 +23,6 @@ public class JunctionCreationModule : IModule
 
         containerRegistry.RegisterForNavigation<JunctionWizardHostView, JunctionWizardHostViewModel>(ViewNames.JunctionWizardHost);
         containerRegistry.RegisterForNavigation<SelectSourceView, SelectSourceViewModel>(ViewNames.WizardStep_SelectSource);
+        containerRegistry.RegisterForNavigation<PreFlightView, PreFlightViewModel>(ViewNames.WizardStep_PreFlight);
     }
 }
