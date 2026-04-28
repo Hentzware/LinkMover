@@ -5,6 +5,7 @@
 using LinkMover.Core.Navigation;
 using LinkMover.JunctionCreation.ViewModels;
 using LinkMover.JunctionCreation.Views;
+using LinkMover.JunctionCreation.Wizard;
 using Prism.Ioc;
 using Prism.Modularity;
 
@@ -16,6 +17,8 @@ public class JunctionCreationModule : IModule
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterSingleton<IJunctionWizardOrchestrator, JunctionWizardOrchestrator>();
+
         containerRegistry.RegisterForNavigation<JunctionWizardHostView, JunctionWizardHostViewModel>(ViewNames.JunctionWizardHost);
     }
 }

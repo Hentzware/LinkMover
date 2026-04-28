@@ -8,4 +8,5 @@ public static class RegionNames
 {
     public const string Content = nameof(Content);
     public const string Status = nameof(Status);
+    public const string WizardStep = nameof(WizardStep);
 }
