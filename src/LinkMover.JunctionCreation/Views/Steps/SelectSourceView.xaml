@@ -1,0 +1,58 @@
+<!-- Copyright (c) 2026 Henning Entz
+     SPDX-License-Identifier: Apache-2.0 WITH LicenseRef-Commons-Clause
+     See LICENSE for the full Apache 2.0 text and Commons Clause restriction. -->
+<UserControl x:Class="LinkMover.JunctionCreation.Views.Steps.SelectSourceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid Margin="32,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Welches Verzeichnis möchtest du auslagern?"
+                   FontSize="16" Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1" Text="Quelle wird auf das Ziel kopiert, anschließend gelöscht und durch eine Junction ersetzt."
+                   Foreground="#666" Margin="0,0,0,24" TextWrapping="Wrap"/>
+
+        <Grid Grid.Row="2" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Quelle:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding Context.Source, UpdateSourceTrigger=PropertyChanged}"
+                     Padding="6,4" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Content="Durchsuchen…" Margin="8,0,0,0" Padding="12,4"
+                    Command="{Binding BrowseSourceCommand}"/>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Ziel:" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding Context.Target, UpdateSourceTrigger=PropertyChanged}"
+                     Padding="6,4" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Content="Durchsuchen…" Margin="8,0,0,0" Padding="12,4"
+                    Command="{Binding BrowseTargetCommand}"/>
+        </Grid>
+
+        <CheckBox Grid.Row="4" Content="Trockenlauf — alles berechnen, aber nichts schreiben"
+                  IsChecked="{Binding Context.DryRun}" Margin="80,16,0,0"/>
+
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Weiter" Command="{Binding ContinueCommand}" Padding="24,8" FontWeight="SemiBold"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

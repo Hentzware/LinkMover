@@ -5,8 +5,29 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid Margin="24">
-        <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="SemiBold" VerticalAlignment="Top"/>
+             xmlns:nav="clr-namespace:LinkMover.Core.Navigation;assembly=LinkMover.Core"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Loaded="OnLoaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Padding="24,16" Background="#F5F5F5" BorderBrush="#DDD" BorderThickness="0,0,0,1">
+            <TextBlock Text="Junction erstellen" FontSize="22" FontWeight="SemiBold"/>
+        </Border>
+
+        <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static nav:RegionNames.WizardStep}"/>
+
+        <Border Grid.Row="2" Padding="24,12" BorderBrush="#DDD" BorderThickness="0,1,0,0" Background="#FAFAFA">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#666"
+                           Text="{Binding StepLabel}"/>
+                <Button HorizontalAlignment="Right" Content="Abbrechen" Padding="20,6"
+                        Command="{Binding CancelCommand}"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
