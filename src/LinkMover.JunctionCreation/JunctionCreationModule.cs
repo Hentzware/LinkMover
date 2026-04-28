@@ -26,5 +26,7 @@ public class JunctionCreationModule : IModule
         containerRegistry.RegisterForNavigation<PreFlightView, PreFlightViewModel>(ViewNames.WizardStep_PreFlight);
         containerRegistry.RegisterForNavigation<CopyView, CopyViewModel>(ViewNames.WizardStep_Copy);
         containerRegistry.RegisterForNavigation<VerifyView, VerifyViewModel>(ViewNames.WizardStep_Verify);
+        containerRegistry.RegisterForNavigation<CleanupView, CleanupViewModel>(ViewNames.WizardStep_Cleanup);
+        containerRegistry.RegisterForNavigation<CreateLinkView, CreateLinkViewModel>(ViewNames.WizardStep_CreateLink);
     }
 }

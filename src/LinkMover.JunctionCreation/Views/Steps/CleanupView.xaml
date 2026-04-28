@@ -1,0 +1,51 @@
+<!-- Copyright (c) 2026 Henning Entz
+     SPDX-License-Identifier: Apache-2.0 WITH LicenseRef-Commons-Clause
+     See LICENSE for the full Apache 2.0 text and Commons Clause restriction. -->
+<UserControl x:Class="LinkMover.JunctionCreation.Views.Steps.CleanupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid Margin="32,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Quelle aufräumen" FontSize="16" Margin="0,0,0,16"/>
+
+        <Border Grid.Row="1" Padding="16" Margin="0,0,0,16"
+                Background="#FFF3E0" BorderBrush="#EF6C00" BorderThickness="1">
+            <StackPanel>
+                <TextBlock FontWeight="SemiBold" Margin="0,0,0,4">
+                    Letzter destruktiver Schritt
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    Die Quelle wird jetzt gelöscht. Ziel ist bereits vollständig kopiert und verifiziert.
+                    Wenn du jetzt abbrichst, bleibt die Quelle intakt — das Ziel-Verzeichnis musst du dann
+                    manuell aufräumen oder den Wizard erneut starten.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Grid.Row="2" Margin="0,0,0,12">
+            <Run Text="Wird gelöscht: " Foreground="#666"/>
+            <Run Text="{Binding Context.Source, Mode=OneWay}" FontFamily="Consolas"/>
+        </TextBlock>
+
+        <TextBlock Grid.Row="3" Text="{Binding StatusText}" Foreground="#666" Margin="0,8,0,0"
+                   Visibility="{Binding HasStatus, Converter={StaticResource BoolToVis}}"/>
+
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Wizard beenden" Command="{Binding AbortCommand}" Padding="20,6" Margin="0,0,8,0"
+                    IsEnabled="{Binding CanInteract}"/>
+            <Button Content="Quelle jetzt löschen" Command="{Binding DeleteCommand}" Padding="24,8"
+                    FontWeight="SemiBold" Background="#C62828" Foreground="White"
+                    IsEnabled="{Binding CanInteract}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
